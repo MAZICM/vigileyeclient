@@ -1,6 +1,4 @@
-// pages/api/getOwnerName.js
-
-import { MongoClient } from 'mongodb';
+import axios from 'axios';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,26 +8,12 @@ export default async function handler(req, res) {
   const { cardID } = req.query;
 
   try {
-    // Connect to MongoDB
-    const client = new MongoClient('mongodb://localhost:27017');
-    await client.connect();
+    // Send a GET request to the Flask server to fetch the owner name
+    const response = await axios.get(`http://localhost:5000/api/getOwnerName?cardID=${cardID}`);
 
-    const db = client.db('2FA'); // Assuming your database is named '2FA'
-    const collection = db.collection('users'); // Assuming your collection is named 'users'
-
-    // Query the database to find the card owner name based on the card ID
-    const user = await collection.findOne({ cardID });
-
-    if (user) {
-      // If user found, return the owner name
-      res.status(200).json({ ownerName: user.name });
-    } else {
-      // If user not found, return an error message
-      res.status(404).json({ message: 'User not found' });
-    }
-
-    // Close the MongoDB connection
-    await client.close();
+    // Extract the owner name from the response and send it back to the client
+    const { ownerName } = response.data;
+    res.status(200).json({ ownerName });
   } catch (error) {
     console.error('Error fetching owner name:', error);
     res.status(500).json({ message: 'Internal Server Error' });
