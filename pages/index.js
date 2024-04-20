@@ -1,49 +1,30 @@
+import { useState, useEffect } from 'react';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import socketIOClient from 'socket.io-client';
-import Dashboard from '/components/Dashboard';
-
-const ENDPOINT = 'http://localhost:5000'; // Update with your server endpoint
-
-function App() {
-  const [latestCardID, setLatestCardID] = useState('');
-  const [cardOwnerName, setCardOwnerName] = useState('');
+export default function Home() {
+  const [ownerImage, setOwnerImage] = useState(null);
+  const cardID = '1111'; // Provide the card ID you want to fetch the image for
 
   useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-
-    socket.on('connect', () => {
-      console.log('Connected to server');
-    });
-
-    socket.on('latest_cardID', (data) => {
-      console.log('Received latest card ID:', data.cardID);
-      setLatestCardID(data.cardID);
-      fetchOwnerName(data.cardID); // Fetch owner name when a new card ID is received
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  const fetchOwnerName = async (cardID) => {
-    try {
-      const response = await axios.get(`${ENDPOINT}/api/getOwnerName?cardID=${cardID}`);
-      console.log('Owner name:', response.data.ownerName);
-      setCardOwnerName(response.data.ownerName);
-    } catch (error) {
-      console.error('Error fetching owner name:', error);
-      setCardOwnerName(''); // Reset card owner name if an error occurs
-    }
-  };
+    // Fetch the owner image based on the card ID
+    fetch(`http://192.168.11.154:5000/api/getOwnerImage?cardID=${cardID}`)
+      .then(response => {
+        if (response.ok) {
+          return response.blob();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(blob => {
+        // Create a URL for the blob and set it as the owner image
+        const imageUrl = URL.createObjectURL(blob);
+        setOwnerImage(imageUrl);
+      })
+      .catch(error => console.error('Error fetching image:', error));
+  }, [cardID]);
 
   return (
     <div>
-      <Dashboard cardID={latestCardID} cardOwnerName={cardOwnerName} />
+      <h1>Owner Image</h1>
+      {ownerImage && <img src={ownerImage} alt="Owner" />}
     </div>
   );
 }
-
-export default App;
