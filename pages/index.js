@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
@@ -6,10 +5,8 @@ export default function Home() {
   const [ownerImage, setOwnerImage] = useState(null);
   const [cardID, setCardID] = useState('1111');
 
-
   // useEffect hook to handle side effects
   useEffect(() => {
-
     const socket = io('http://192.168.11.154:5000');  // Connect to Flask-SocketIO server
     
     // Listen for updates to the latest card ID from the server
@@ -22,26 +19,6 @@ export default function Home() {
       socket.disconnect();
     };
   }, []);  // Empty dependency array ensures useEffect runs only once
-
-  // Refresh the page whenever cardID changes
-  useEffect(() => {
-    // Function to refresh the page
-    const refreshPage = () => {
-      window.location.reload();
-    };
-
-    // Set up a listener for changes in cardID and refresh the page when it changes
-    const handleCardIDChange = () => {
-      refreshPage();
-    };
-
-    window.addEventListener('cardIDChange', handleCardIDChange);
-
-    // Clean up event listener when component unmounts
-    return () => {
-      window.removeEventListener('cardIDChange', handleCardIDChange);
-    };
-  }, [cardID]);  // Refresh the page whenever cardID changes
 
   // Fetch owner image based on the updated card ID
   useEffect(() => {
@@ -62,8 +39,6 @@ export default function Home() {
   }, [cardID]);  // Fetch image whenever cardID changes
 
   // Your JSX code...
-
-  // Your JSX code...
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200">
       <div className="max-w-xl w-full mx-auto p-8 shadow-md rounded-md bg-white">
@@ -78,10 +53,6 @@ export default function Home() {
           )}
         </div>
       </div>
-
     </div>
   );
-};
-
-// Export the component as default
-export default Index;
+}
