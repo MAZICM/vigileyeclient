@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
@@ -5,7 +6,10 @@ export default function Home() {
   const [ownerImage, setOwnerImage] = useState(null);
   const [cardID, setCardID] = useState('1111');
 
+
+  // useEffect hook to handle side effects
   useEffect(() => {
+
     const socket = io('http://192.168.11.154:5000');  // Connect to Flask-SocketIO server
     
     // Listen for updates to the latest card ID from the server
@@ -74,6 +78,10 @@ export default function Home() {
           )}
         </div>
       </div>
+
     </div>
   );
-}
+};
+
+// Export the component as default
+export default Index;

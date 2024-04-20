@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
   try {
     // Send a GET request to the Flask server to fetch the owner name
-    const response = await axios.get(`http://localhost:5000/api/getOwnerName?cardID=${cardID}`);
+    const response = await axios.get(`http://192.168.11.154:5000/api/getOwnerName?cardID=${cardID}`);
 
     // Extract the owner name from the response and send it back to the client
     const { ownerName } = response.data;
