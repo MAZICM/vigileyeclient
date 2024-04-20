@@ -1,30 +1,35 @@
-import { useState, useEffect } from 'react';
+// Import necessary modules
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import io from 'socket.io-client';
+import Dashboard from '/components/Dashboard';
 
-export default function Home() {
-  const [ownerImage, setOwnerImage] = useState(null);
-  const cardID = '1111'; // Provide the card ID you want to fetch the image for
+// Main functional component
+const Index = () => {
+  // State variables
+  const [latestCardID, setLatestCardID] = useState('0000');
+  const socket = io('http://192.168.11.154:5000');
 
+  // useEffect hook to handle side effects
   useEffect(() => {
-    // Fetch the owner image based on the card ID
-    fetch(`http://192.168.11.154:5000/api/getOwnerImage?cardID=${cardID}`)
-      .then(response => {
-        if (response.ok) {
-          return response.blob();
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then(blob => {
-        // Create a URL for the blob and set it as the owner image
-        const imageUrl = URL.createObjectURL(blob);
-        setOwnerImage(imageUrl);
-      })
-      .catch(error => console.error('Error fetching image:', error));
-  }, [cardID]);
+    // Listen for 'latest_cardID' event emitted by the Flask server
+    socket.on('latest_cardID', (data) => {
+      setLatestCardID(data.cardID);
+    });
 
+    // Clean up the event listener
+    return () => {
+      socket.disconnect();
+    };
+  }, []); // Ensure this effect runs only once
+
+  // Render the Dashboard component with the latest card ID
   return (
     <div>
-      <h1>Owner Image</h1>
-      {ownerImage && <img src={ownerImage} alt="Owner" />}
+      <Dashboard cardID={latestCardID} />
     </div>
   );
-}
+};
+
+// Export the component as default
+export default Index;
