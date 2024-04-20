@@ -1,9 +1,45 @@
 import { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
 export default function Home() {
   const [ownerImage, setOwnerImage] = useState(null);
-  const cardID = '1111'; // Provide the card ID you want to fetch the image for
+  const [cardID, setCardID] = useState('1111');
 
+  useEffect(() => {
+    const socket = io('http://192.168.11.154:5000');  // Connect to Flask-SocketIO server
+    
+    // Listen for updates to the latest card ID from the server
+    socket.on('latest_cardID', ({ cardID }) => {
+      setCardID(cardID);  // Update cardID state with the latest value
+    });
+
+    // Clean up socket connection when component unmounts
+    return () => {
+      socket.disconnect();
+    };
+  }, []);  // Empty dependency array ensures useEffect runs only once
+
+  // Refresh the page whenever cardID changes
+  useEffect(() => {
+    // Function to refresh the page
+    const refreshPage = () => {
+      window.location.reload();
+    };
+
+    // Set up a listener for changes in cardID and refresh the page when it changes
+    const handleCardIDChange = () => {
+      refreshPage();
+    };
+
+    window.addEventListener('cardIDChange', handleCardIDChange);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      window.removeEventListener('cardIDChange', handleCardIDChange);
+    };
+  }, [cardID]);  // Refresh the page whenever cardID changes
+
+  // Fetch owner image based on the updated card ID
   useEffect(() => {
     // Fetch the owner image based on the card ID
     fetch(`http://192.168.11.154:5000/api/getOwnerImage?cardID=${cardID}`)
@@ -19,12 +55,25 @@ export default function Home() {
         setOwnerImage(imageUrl);
       })
       .catch(error => console.error('Error fetching image:', error));
-  }, [cardID]);
+  }, [cardID]);  // Fetch image whenever cardID changes
 
+  // Your JSX code...
+
+  // Your JSX code...
   return (
-    <div>
-      <h1>Owner Image</h1>
-      {ownerImage && <img src={ownerImage} alt="Owner" />}
+    <div className="min-h-screen flex items-center justify-center bg-gray-200">
+      <div className="max-w-xl w-full mx-auto p-8 shadow-md rounded-md bg-white">
+        <h1 className="text-3xl font-semibold mb-4 text-center">Owner Image</h1>
+        <div className="flex justify-center">
+          {ownerImage ? (
+            <img src={ownerImage} alt="Owner" className="rounded-lg" />
+          ) : (
+            <div className="bg-gray-300 w-64 h-64 flex items-center justify-center rounded-lg">
+              <span className="text-gray-500">Loading...</span>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
