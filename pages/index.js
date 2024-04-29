@@ -13,10 +13,17 @@ export default function Home() {
   useEffect(() => {
     const socket = io('http://192.168.0.103:5000');  // Update with your server's address and port
 
-    socket.on('latest_cardID', ({ cardID, ownerName }) => {
+    socket.on('latest_cardID', ({ cardID, ownerName, ownerImage }) => {
       setCardID(cardID);
       setOwnerName(ownerName);
+      if (ownerImage) {
+        setOwnerImage(`data:image/png;base64,${ownerImage}`);  // Update image with base64 data
+      } else {
+        setOwnerImage(null);
+      }
+      console.log('Received latest_cardID:', cardID, ownerName, ownerImage);
     });
+  
 
     socket.on('ai_frame', (data) => {
       if (data && data.frame) {
@@ -43,6 +50,7 @@ export default function Home() {
     if (cardID) {
       fetch(`http://192.168.0.103:5000/api/getOwnerImage?cardID=${cardID}`)
         .then((response) => {
+          console.log("image received");
           if (response.ok) {
             return response.blob();
           }
@@ -55,6 +63,8 @@ export default function Home() {
         .catch((error) => console.error("Error fetching image:", error));
     }
   }, [cardID]);
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -88,6 +98,7 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-center mb-4 text-blue-600">Card Owner Information</h2>
           <div className="flex flex-col items-center">
             {ownerImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={ownerImage} alt="Owner" className="rounded-lg w-64 h-64" />
             ) : (
               <div className="bg-gray-300 w-64 h-64 flex items-center justify-center rounded-lg">
