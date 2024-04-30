@@ -20,6 +20,9 @@ export default function AddUser() {
     formData.append('image', capturedImage);  // Ensure capturedImage is not null
     formData.append('name', userInfo.name);   // Ensure userInfo.name is not empty
     formData.append('cardID', userInfo.cardID);  // Ensure userInfo.cardID is not empty
+    
+    // Append binary image data
+    
   
     try {
       const response = await axios.post('http://192.168.0.103:5000/api/add-user', formData, {
