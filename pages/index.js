@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-
+import Navbar from '../components/Navbar'; // Import the Navbar component
 export default function Home() {
   const [ownerName, setOwnerName] = useState('Loading...');
   const [ownerImage, setOwnerImage] = useState(null);
@@ -67,13 +67,14 @@ export default function Home() {
   
 
   return (
+    
     <div className="min-h-screen bg-gray-100 p-8">
       {/* Navigation Bar */}
-      <div className="flex justify-between items-center p-4 bg-blue-600 text-white rounded-lg shadow-md">
-        <h1 className="text-xl font-bold">VigilEye Dashboard</h1>
-        <button className="bg-blue-800 px-4 py-2 rounded hover:bg-blue-700 transition">Logout</button>
-      </div>
-
+      
+    
+      <Navbar /> {/* Include the Navbar at the top */}
+      
+    
        {/* Access Status Section */}
        <div className="mt-8">
         {accessStatus === 'granted' ? (

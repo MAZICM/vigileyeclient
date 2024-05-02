@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import CameraComponent from '../components/CameraComponent';  // Import the camera component
+import Navbar from '../components/Navbar';
 const socket = io('http://192.168.0.103:5000');
 
 export default function AddUser() {
@@ -97,6 +98,7 @@ export default function AddUser() {
 
   return (
     <div className="min-h-screen p-6 bg-gray-100">
+      <Navbar /> {/* Include the Navbar at the top */}
       <h1 className="text-2xl font-bold text-center text-black">Add New User</h1>
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded shadow-md">
         <div className="mb-4">

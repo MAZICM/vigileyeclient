@@ -1,4 +1,5 @@
 import { getLogsCollection } from './lib/lib';
+import Navbar from '../components/Navbar';
 // pages/logs.js
 
 
@@ -31,6 +32,10 @@ export async function getServerSideProps() {
 export default function LogsPage({ logs }) {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+       {/* Navigation Bar */}
+      
+    
+       <Navbar /> {/* Include the Navbar at the top */}
       <h1 className="text-2xl font-bold text-center mb-4">Logs</h1>
       {logs.length > 0 ? (
         <div className="overflow-x-auto">
