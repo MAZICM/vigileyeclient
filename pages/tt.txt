@@ -7,9 +7,11 @@ import ImageComponent from '/components/ImageComponent';
 const ENDPOINT = 'http://localhost:5000'; // Update with your server endpoint
 
 function App() {
+
   const [latestCardID, setLatestCardID] = useState('');
   const [cardOwnerName, setCardOwnerName] = useState('');
   const [cardID, setCardID] = useState(''); // Define cardID state
+  
 
   useEffect(() => {
     const socket = socketIOClient(ENDPOINT);

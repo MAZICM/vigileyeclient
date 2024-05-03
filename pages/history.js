@@ -31,41 +31,45 @@ export const getServerSideProps = async () => {
 
 // Component to display the model history
 const ModelHistoryPage = ({ modelHistory }) => (
-  <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-    {/* Navigation Bar */}
+  <div>
     <Navbar /> {/* Include the Navbar at the top */}
+  
+  <div className="flex items-center justify-center min-h-screen bg-gray-100"> {/* Centered container */}
+    
+  
+    <div className="w-3/4 p-8 bg-white rounded-lg shadow-xl transform hover:scale-105 transition duration-300"> {/* Content block with 3D effect */}
+    
 
-    <h1 className="text-2xl font-bold text-center mb-6 text-black">Model Update History</h1>
+      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Model Update History</h1>
 
-    <div className="pb-6 mb-6">
-      {modelHistory.length === 0 ? (
-        <p className="text-center text-black">No history available.</p>
-      ) : (
-        <ul className="divide-y divide-gray-300">
-          {modelHistory.map((record) => (
-            <li key={record.id} className="py-4 flex">
-              {/* Two columns for model ID and training date */}
-              <div className="w-1/2">
-                {/* First column */}
-                <p className="text-lg font-semibold text-black">Model ID: {record.id}</p>
-              </div>
-              <div className="w-1/2 text-right">
-                {/* Second column, aligned right */}
-                <p className="text-black">Updated at: {record.datetime}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="pb-6 mb-6">
+        {modelHistory.length === 0 ? (
+          <p className="text-center text-gray-600">No history available.</p>
+        ) : (
+          <ul className="divide-y divide-gray-300">
+            {modelHistory.map((record) => (
+              <li key={record.id} className="py-4 flex justify-between">
+                <div className="w-1/2">
+                  <p className="text-lg font-semibold text-gray-800">Model ID: {record.id}</p>
+                </div>
+                <div className="w-1/2 text-right">
+                  <p className="text-gray-600">Updated at: {record.datetime}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="text-center">
+        <Link href="/">
+          <span className="inline-flex items-center text-blue-500 hover:text-blue-700 transition">
+            &larr; Back to Home
+          </span>
+        </Link>
+      </div>
     </div>
-
-    <div className="text-center">
-      <Link href="/">
-        <span className="inline-flex items-center text-blue-500 hover:text-blue-700 transition">
-          &larr; Back to Home {/* Back to Home with hover effect */}
-        </span>
-      </Link>
-    </div>
+  </div>
   </div>
 );
 

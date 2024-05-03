@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 export default function ViewUsers() {
   const [users, setUsers] = useState([]);
@@ -19,6 +20,7 @@ export default function ViewUsers() {
 
   return (
     <div className="min-h-screen p-6 bg-gray-100 text-black">
+      <Navbar /> {/* Include the Navbar at the top */}
       <h1 className="text-2xl font-bold text-center text-black">Users Collection</h1>
       {users.length > 0 ? (
         <div className="overflow-x-auto">
